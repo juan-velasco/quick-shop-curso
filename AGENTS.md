@@ -27,9 +27,14 @@ Datos del seed de productos: `docs/products-images.json`.
 
 ## Orden de desarrollo
 
-1. Backend primero, por modulo y en este orden: autenticacion, usuarios, productos, carrito, pedidos. Cada modulo con sus migraciones y tests antes de pasar al siguiente.
-2. Frontend despues, cuando la API del modulo correspondiente esta estable. Consumir la API real, no mocks permanentes.
-3. Integracion en docker-compose y verificacion end to end.
+Backend y frontend se desarrollan en paralelo, modulo a modulo.
+
+1. Orden de modulos: autenticacion, usuarios, productos, carrito, pedidos. Cada modulo se cierra completo (backend y frontend, con tests) antes de pasar al siguiente.
+2. Dentro de cada modulo, backend y frontend avanzan a la vez, en paralelo (por ejemplo con subagentes o worktrees separados, uno por parte).
+3. El contrato entre ambos es la spec del modulo (`docs/specs-prds/<modulo>.md`): endpoints, request, response y codigos de error. Ninguna parte cambia el contrato por su cuenta; si hace falta cambiarlo, se actualiza la spec primero y se avisa a la otra parte.
+4. El frontend puede apoyarse temporalmente en respuestas simuladas segun la spec mientras el endpoint no exista, y debe pasar a la API real antes de cerrar el modulo.
+5. Cierre de modulo: tests de backend, tests del frontend y flujo e2e contra la API real en docker-compose.
+6. Integracion final en docker-compose y verificacion end to end.
 
 Si una spec es ambigua o contradictoria, parar y preguntar; no inventar. Si se cambia el comportamiento, actualizar la spec en el mismo cambio.
 

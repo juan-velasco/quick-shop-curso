@@ -1,6 +1,6 @@
 # Frontend QuickShop
 
-SPA React. Contexto global en `../AGENTS.md`. Specs de cada modulo (seccion "Pantallas") en `../docs/specs-prds/`. Empezar solo cuando la API del modulo esta estable.
+SPA React. Contexto global en `../AGENTS.md`. Specs de cada modulo (seccion "Pantallas") en `../docs/specs-prds/`. Se desarrolla en paralelo al backend; el contrato es la spec del modulo.
 
 ## Stack y herramientas
 
