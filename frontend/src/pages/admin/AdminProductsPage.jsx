@@ -6,6 +6,8 @@ import Pagination from "../../components/Pagination.jsx";
 import StateMessage from "../../components/StateMessage.jsx";
 import { formatPrice } from "../../format.js";
 import { useFetch } from "../../useFetch.js";
+import LinkButton from "../../components/LinkButton.jsx";
+import Tag from "../../components/Tag.jsx";
 
 const PAGE_SIZE = 20;
 
@@ -29,14 +31,9 @@ export default function AdminProductsPage() {
 
   return (
     <section className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Productos</h1>
-        <Link
-          to="/admin/products/new"
-          className="rounded bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
-        >
-          Nuevo producto
-        </Link>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <h1 className="text-display-md-sm md:text-display-md">Productos</h1>
+        <LinkButton to="/admin/products/new">Nuevo producto</LinkButton>
       </div>
 
       {actionError && <StateMessage kind="error">{actionError}</StateMessage>}
@@ -47,32 +44,37 @@ export default function AdminProductsPage() {
       )}
       {!loading && !error && data.items.length > 0 && (
         <>
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[40rem] border-collapse bg-white text-left text-sm">
+          <div className="overflow-x-auto rounded-lg border border-hairline bg-surface">
+            <table className="w-full min-w-[40rem] border-collapse text-left text-body-md">
+              <caption className="sr-only">Listado de productos</caption>
               <thead>
-                <tr className="border-b border-gray-200">
-                  <th className="p-2">Nombre</th>
-                  <th className="p-2">Precio</th>
-                  <th className="p-2">Stock</th>
-                  <th className="p-2">Estado</th>
-                  <th className="p-2">Acciones</th>
+                <tr className="border-b border-hairline text-body-strong">
+                  <th scope="col" className="p-3">Nombre</th>
+                  <th scope="col" className="p-3">Precio</th>
+                  <th scope="col" className="p-3">Stock</th>
+                  <th scope="col" className="p-3">Estado</th>
+                  <th scope="col" className="p-3">Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 {data.items.map((product) => (
-                  <tr key={product.id} className="border-b border-gray-100">
-                    <td className="p-2">{product.name}</td>
-                    <td className="p-2">{formatPrice(product.price)}</td>
-                    <td className="p-2">{product.stock}</td>
-                    <td className="p-2">{product.is_active ? "Activo" : "Inactivo"}</td>
-                    <td className="flex gap-2 p-2">
-                      <Link
+                  <tr key={product.id} className="border-b border-hairline last:border-0">
+                    <td className="p-3">{product.name}</td>
+                    <td className="p-3">{formatPrice(product.price)}</td>
+                    <td className="p-3">{product.stock}</td>
+                    <td className="p-3">
+                      <Tag variant={product.is_active ? "mint" : "shade"}>
+                        {product.is_active ? "Activo" : "Inactivo"}
+                      </Tag>
+                    </td>
+                    <td className="flex gap-2 p-3">
+                      <LinkButton
                         to={`/admin/products/${product.id}/edit`}
-                        className="rounded border border-gray-300 px-3 py-1 hover:bg-gray-100"
+                        variant="secondary"
                         aria-label={`Editar ${product.name}`}
                       >
                         Editar
-                      </Link>
+                      </LinkButton>
                       <Button
                         variant="danger"
                         disabled={!product.is_active}

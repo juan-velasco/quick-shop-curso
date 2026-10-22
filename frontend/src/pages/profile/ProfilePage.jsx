@@ -6,6 +6,7 @@ import StateMessage from "../../components/StateMessage.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { PASSWORD_POLICY, isValidPassword } from "../../format.js";
 import { useFetch } from "../../useFetch.js";
+import Notice from "../../components/Notice.jsx";
 
 export default function ProfilePage() {
   const { user, setUser } = useAuth();
@@ -56,9 +57,9 @@ export default function ProfilePage() {
 
   return (
     <section className="mx-auto max-w-md space-y-8">
-      <h1 className="text-2xl font-bold">Mi perfil</h1>
+      <h1 className="text-heading-xl">Mi perfil</h1>
 
-      <form onSubmit={handleName} className="space-y-4" noValidate>
+      <form onSubmit={handleName} className="space-y-4 rounded-lg border border-hairline bg-surface p-6 shadow-card sm:p-8" noValidate>
         <FormField id="profile-email" label="Email" value={profile.email} readOnly disabled />
         <FormField
           id="profile-name"
@@ -66,19 +67,19 @@ export default function ProfilePage() {
           value={fullName}
           onChange={(event) => setFullName(event.target.value)}
         />
-        {nameMessage.text && (
-          <p
-            role={nameMessage.kind === "error" ? "alert" : "status"}
-            className={nameMessage.kind === "error" ? "text-sm text-red-700" : "text-sm text-green-700"}
-          >
-            {nameMessage.text}
-          </p>
-        )}
+        {nameMessage.text &&
+          (nameMessage.kind === "error" ? (
+            <p role="alert" className="text-caption font-semibold text-danger">
+              {nameMessage.text}
+            </p>
+          ) : (
+            <Notice>{nameMessage.text}</Notice>
+          ))}
         <Button type="submit">Guardar nombre</Button>
       </form>
 
-      <form onSubmit={handlePassword} className="space-y-4" noValidate>
-        <h2 className="text-lg font-semibold">Cambiar password</h2>
+      <form onSubmit={handlePassword} className="space-y-4 rounded-lg border border-hairline bg-surface p-6 shadow-card sm:p-8" noValidate>
+        <h2 className="text-heading-md">Cambiar password</h2>
         <FormField
           id="current-password"
           label="Password actual"
@@ -96,14 +97,14 @@ export default function ProfilePage() {
           value={passwords.password}
           onChange={(event) => setPasswords({ ...passwords, password: event.target.value })}
         />
-        {passwordMessage.text && (
-          <p
-            role={passwordMessage.kind === "error" ? "alert" : "status"}
-            className={passwordMessage.kind === "error" ? "text-sm text-red-700" : "text-sm text-green-700"}
-          >
-            {passwordMessage.text}
-          </p>
-        )}
+        {passwordMessage.text &&
+          (passwordMessage.kind === "error" ? (
+            <p role="alert" className="text-caption font-semibold text-danger">
+              {passwordMessage.text}
+            </p>
+          ) : (
+            <Notice>{passwordMessage.text}</Notice>
+          ))}
         <Button type="submit">Cambiar password</Button>
       </form>
     </section>

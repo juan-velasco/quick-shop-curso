@@ -6,6 +6,8 @@ import StateMessage from "../../components/StateMessage.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { formatPrice } from "../../format.js";
 import { useFetch } from "../../useFetch.js";
+import Notice from "../../components/Notice.jsx";
+import Tag from "../../components/Tag.jsx";
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -27,23 +29,27 @@ export default function ProductDetailPage() {
 
   return (
     <article className="grid gap-6 md:grid-cols-2">
-      <img src={product.image_url} alt={product.name} className="w-full rounded-lg object-cover" />
+      <img
+        src={product.image_url}
+        alt={product.name}
+        className="w-full rounded-lg border border-hairline object-cover"
+      />
       <div className="space-y-4">
-        <Link to="/" className="text-sm text-indigo-700 underline">
+        <Link to="/" className="text-caption text-ink underline underline-offset-4">
           Volver al catalogo
         </Link>
-        <h1 className="text-2xl font-bold">{product.name}</h1>
-        <p className="text-gray-700">{product.description}</p>
-        <p className="text-2xl font-bold">{formatPrice(product.price)}</p>
+        <h1 className="text-display-md-sm md:text-display-md">{product.name}</h1>
+        <p className="text-body-lg text-muted">{product.description}</p>
+        <p className="text-heading-xl">{formatPrice(product.price)}</p>
         {soldOut ? (
-          <span className="rounded bg-red-100 px-2 py-0.5 font-medium text-red-800">Agotado</span>
+          <Tag variant="shade">Agotado</Tag>
         ) : (
-          <p className="text-sm text-gray-600">Stock: {product.stock}</p>
+          <p className="text-caption text-muted">Stock: {product.stock}</p>
         )}
         {user?.role !== "admin" && (
           <div className="flex items-end gap-3">
             <div>
-              <label htmlFor="quantity" className="block text-sm font-medium">
+              <label htmlFor="quantity" className="block text-body-strong">
                 Cantidad
               </label>
               <input
@@ -54,7 +60,7 @@ export default function ProductDetailPage() {
                 value={soldOut ? 0 : quantity}
                 disabled={soldOut}
                 onChange={handleQuantity}
-                className="w-24 rounded border border-gray-300 px-3 py-2"
+                className="min-h-control w-24 rounded-md border border-control bg-surface px-3 py-2.5 disabled:bg-canvas disabled:text-muted"
               />
             </div>
             <Button
@@ -66,9 +72,7 @@ export default function ProductDetailPage() {
           </div>
         )}
         {notice && (
-          <p role="status" className="text-sm text-indigo-800">
-            {notice}
-          </p>
+          <Notice variant="info">{notice}</Notice>
         )}
       </div>
     </article>

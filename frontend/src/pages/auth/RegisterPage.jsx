@@ -42,8 +42,8 @@ export default function RegisterPage() {
   }
 
   return (
-    <section className="mx-auto max-w-sm space-y-4">
-      <h1 className="text-2xl font-bold">Crear cuenta</h1>
+    <section className="mx-auto max-w-sm space-y-4 rounded-lg border border-hairline bg-surface p-6 shadow-card sm:p-8">
+      <h1 className="text-heading-xl">Crear cuenta</h1>
       <form onSubmit={handleSubmit} className="space-y-4" noValidate>
         <FormField
           id="email"
@@ -77,7 +77,7 @@ export default function RegisterPage() {
           required
         />
         {formError && (
-          <p role="alert" className="text-sm text-red-700">
+          <p role="alert" className="text-caption font-semibold text-danger">
             {formError}
           </p>
         )}
@@ -85,9 +85,9 @@ export default function RegisterPage() {
           Registrarse
         </Button>
       </form>
-      <p className="text-sm">
+      <p className="text-caption">
         Ya tienes cuenta?{" "}
-        <Link to="/login" className="text-indigo-700 underline">
+        <Link to="/login" className="text-ink underline underline-offset-4">
           Inicia sesion
         </Link>
       </p>

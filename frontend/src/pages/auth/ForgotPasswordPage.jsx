@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { forgotPassword } from "../../api/auth.js";
 import Button from "../../components/Button.jsx";
 import FormField from "../../components/FormField.jsx";
+import Notice from "../../components/Notice.jsx";
 
 const CONFIRMATION =
   "Si el email existe, recibiras un enlace de recuperacion. Revisa tu bandeja de entrada.";
@@ -32,12 +33,10 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <section className="mx-auto max-w-sm space-y-4">
-      <h1 className="text-2xl font-bold">Recuperar password</h1>
+    <section className="mx-auto max-w-sm space-y-4 rounded-lg border border-hairline bg-surface p-6 shadow-card sm:p-8">
+      <h1 className="text-heading-xl">Recuperar password</h1>
       {sent ? (
-        <p role="status" className="rounded bg-green-100 p-2 text-sm text-green-800">
-          {CONFIRMATION}
-        </p>
+        <Notice>{CONFIRMATION}</Notice>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4" noValidate>
           <FormField
@@ -50,7 +49,7 @@ export default function ForgotPasswordPage() {
             required
           />
           {error && (
-            <p role="alert" className="text-sm text-red-700">
+            <p role="alert" className="text-caption font-semibold text-danger">
               {error}
             </p>
           )}
@@ -59,8 +58,8 @@ export default function ForgotPasswordPage() {
           </Button>
         </form>
       )}
-      <p className="text-sm">
-        <Link to="/login" className="text-indigo-700 underline">
+      <p className="text-caption">
+        <Link to="/login" className="text-ink underline underline-offset-4">
           Volver a iniciar sesion
         </Link>
       </p>

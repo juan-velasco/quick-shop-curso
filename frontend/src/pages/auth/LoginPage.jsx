@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import Button from "../../components/Button.jsx";
 import FormField from "../../components/FormField.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
+import Notice from "../../components/Notice.jsx";
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -28,17 +29,17 @@ export default function LoginPage() {
   }
 
   return (
-    <section className="mx-auto max-w-sm space-y-4">
-      <h1 className="text-2xl font-bold">Iniciar sesion</h1>
+    <section className="mx-auto max-w-sm space-y-4 rounded-lg border border-hairline bg-surface p-6 shadow-card sm:p-8">
+      <h1 className="text-heading-xl">Iniciar sesion</h1>
       {location.state?.registered && (
-        <p role="status" className="rounded bg-green-100 p-2 text-sm text-green-800">
+        <Notice>
           Cuenta creada. Ya puedes iniciar sesion.
-        </p>
+        </Notice>
       )}
       {location.state?.passwordReset && (
-        <p role="status" className="rounded bg-green-100 p-2 text-sm text-green-800">
+        <Notice>
           Password actualizada. Ya puedes iniciar sesion.
-        </p>
+        </Notice>
       )}
       <form onSubmit={handleSubmit} className="space-y-4" noValidate>
         <FormField
@@ -60,7 +61,7 @@ export default function LoginPage() {
           required
         />
         {error && (
-          <p role="alert" className="text-sm text-red-700">
+          <p role="alert" className="text-caption font-semibold text-danger">
             {error}
           </p>
         )}
@@ -68,14 +69,14 @@ export default function LoginPage() {
           Entrar
         </Button>
       </form>
-      <p className="text-sm">
-        <Link to="/forgot-password" className="text-indigo-700 underline">
+      <p className="text-caption">
+        <Link to="/forgot-password" className="text-ink underline underline-offset-4">
           Has olvidado tu password?
         </Link>
       </p>
-      <p className="text-sm">
+      <p className="text-caption">
         No tienes cuenta?{" "}
-        <Link to="/register" className="text-indigo-700 underline">
+        <Link to="/register" className="text-ink underline underline-offset-4">
           Registrate
         </Link>
       </p>

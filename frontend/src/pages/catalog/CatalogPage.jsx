@@ -6,6 +6,7 @@ import ProductCard from "../../components/ProductCard.jsx";
 import StateMessage from "../../components/StateMessage.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { useFetch } from "../../useFetch.js";
+import Notice from "../../components/Notice.jsx";
 
 const PAGE_SIZE = 12;
 
@@ -41,7 +42,7 @@ export default function CatalogPage() {
   return (
     <section className="space-y-4">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-2xl font-bold">Catalogo</h1>
+        <h1 className="text-display-md-sm md:text-display-md">Catalogo</h1>
         <div>
           <label htmlFor="search" className="sr-only">
             Buscar productos
@@ -52,15 +53,13 @@ export default function CatalogPage() {
             placeholder="Buscar productos"
             value={input}
             onChange={(event) => setInput(event.target.value)}
-            className="w-full rounded border border-gray-300 px-3 py-2 sm:w-64"
+            className="min-h-control w-full rounded-md border border-control bg-surface px-3 py-2.5 placeholder:text-muted sm:w-72"
           />
         </div>
       </div>
 
       {notice && (
-        <p role="status" className="rounded bg-indigo-50 p-2 text-sm text-indigo-800">
-          {notice}
-        </p>
+        <Notice variant="info">{notice}</Notice>
       )}
 
       {loading && <StateMessage kind="loading">Cargando productos...</StateMessage>}

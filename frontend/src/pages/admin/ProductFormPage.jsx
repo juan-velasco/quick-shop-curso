@@ -95,12 +95,12 @@ export default function ProductFormPage() {
   }
 
   return (
-    <section className="max-w-xl space-y-4">
-      <h1 className="text-2xl font-bold">{editing ? "Editar producto" : "Nuevo producto"}</h1>
+    <section className="max-w-xl space-y-4 rounded-lg border border-hairline bg-surface p-6 shadow-card sm:p-8">
+      <h1 className="text-heading-xl">{editing ? "Editar producto" : "Nuevo producto"}</h1>
       <form onSubmit={handleSubmit} className="space-y-4" noValidate>
         <FormField id="name" label="Nombre" value={form.name} onChange={update("name")} error={errors.name} />
         <div className="space-y-1">
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="description" className="block text-body-strong">
             Descripcion
           </label>
           <textarea
@@ -109,9 +109,14 @@ export default function ProductFormPage() {
             value={form.description}
             onChange={update("description")}
             aria-invalid={errors.description ? "true" : undefined}
-            className="w-full rounded border border-gray-300 px-3 py-2"
+            aria-describedby={errors.description ? "description-error" : undefined}
+            className="w-full rounded-md border border-control bg-surface px-3 py-2.5 text-body-md"
           />
-          {errors.description && <p className="text-sm text-red-700">{errors.description}</p>}
+          {errors.description && (
+            <p id="description-error" className="text-caption font-semibold text-danger">
+              {errors.description}
+            </p>
+          )}
         </div>
         <FormField
           id="price"
@@ -136,16 +141,17 @@ export default function ProductFormPage() {
           onChange={update("image_url")}
           error={errors.image_url}
         />
-        <label className="flex items-center gap-2 text-sm">
+        <label className="flex min-h-control items-center gap-3 text-body-md">
           <input
             type="checkbox"
+            className="h-5 w-5 accent-black"
             checked={form.is_active}
             onChange={(event) => setForm({ ...form, is_active: event.target.checked })}
           />
           Producto activo
         </label>
         {formError && (
-          <p role="alert" className="text-sm text-red-700">
+          <p role="alert" className="text-caption font-semibold text-danger">
             {formError}
           </p>
         )}

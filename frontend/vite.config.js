@@ -1,6 +1,15 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "tailwindcss";
+import {
+  borderRadius,
+  boxShadow,
+  colors,
+  fontFamily,
+  fontSize,
+  minHeight,
+  minWidth,
+} from "./src/theme/tokens.js";
 
 export default defineConfig({
   plugins: [react()],
@@ -9,7 +18,14 @@ export default defineConfig({
       plugins: [
         tailwindcss({
           content: ["./index.html", "./src/**/*.{js,jsx}"],
-          theme: { extend: {} },
+          theme: {
+            colors,
+            fontFamily,
+            fontSize,
+            borderRadius,
+            boxShadow,
+            extend: { minHeight, minWidth },
+          },
           plugins: [],
         }),
       ],

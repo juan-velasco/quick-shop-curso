@@ -57,6 +57,14 @@ frontend/
   e2e/                       Tests Playwright
 ```
 
+## Diseno visual
+
+- Fuente de verdad visual: `DESIGN.md`. Solo se usa la pista clara/transaccional (canvas crema `#fbfbf5`, superficies blancas, texto negro, aloe y pistacho como relleno); no hay pista oscura.
+- Tokens en `src/theme/tokens.js`, cargados como tema de Tailwind en `vite.config.js` (la paleta de Tailwind por defecto esta reemplazada: usar `bg-canvas`, `bg-surface`, `text-muted`, `rounded-pill`, `text-heading-xl`, etc., no `gray-*` ni `indigo-*`). `src/theme/tokens.test.js` comprueba los contrastes; cualquier color de texto nuevo se anade ahi con su pareja.
+- Tipografia: Inter Variable autoalojada (`@fontsource-variable/inter`, eje `opsz`), `ss03` global. Titulares a peso 330 solo en tamanos grandes.
+- Botones siempre pill (`Button`, `LinkButton`); etiquetas con `Tag`; avisos de exito con `Notice`. Controles de al menos 44 px de alto.
+- Desviaciones del DESIGN por accesibilidad: gris `#a1a1aa` prohibido para texto, borde de campos `#71717a` (3:1), foco negro de 2 px y rojo `#b91c1c` para errores (siempre con texto).
+
 ## Layout y UI
 
 - `MainLayout`: header comun (logo, navegacion, carrito con contador, usuario/salir) y area de contenido donde se renderiza cada pagina con `<Outlet/>`. Footer sencillo.
