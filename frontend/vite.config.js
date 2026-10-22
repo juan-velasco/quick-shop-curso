@@ -1,0 +1,26 @@
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "tailwindcss";
+
+export default defineConfig({
+  plugins: [react()],
+  css: {
+    postcss: {
+      plugins: [
+        tailwindcss({
+          content: ["./index.html", "./src/**/*.{js,jsx}"],
+          theme: { extend: {} },
+          plugins: [],
+        }),
+      ],
+    },
+  },
+  server: { host: "0.0.0.0", port: 5173 },
+  test: {
+    environment: "jsdom",
+    globals: true,
+    setupFiles: ["./src/test/setup.js"],
+    include: ["src/**/*.test.{js,jsx}"],
+    css: false,
+  },
+});
