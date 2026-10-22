@@ -2,7 +2,7 @@
 
 ## Descripcion
 
-Catalogo de productos visible para todos los usuarios autenticados (y el listado publico si se decide) y CRUD completo para el admin. Un producto con stock 0 es visible pero no se puede agregar al carrito. Un producto con `is_active = false` no aparece en el catalogo de clientes (el admin lo ve igualmente).
+Catalogo de productos con listado publico (visible sin sesion), detalle para usuarios autenticados y CRUD completo para el admin. Un producto con stock 0 es visible pero no se puede agregar al carrito. Un producto con `is_active = false` no aparece en el catalogo de clientes (el admin lo ve igualmente).
 
 Seed: 20 productos generados desde `docs/products-images.json`, con mapeo `producto -> name`, `descripcion -> description`, `precio -> price`, `stock -> stock`, `imagen -> image_url`. La ruta del fichero se configura por variable de entorno (`SEED_PRODUCTS_FILE`) y el fichero se monta/copia en la imagen del backend.
 
@@ -32,13 +32,14 @@ Prefijo: `/api/v1/products`.
 
 ### GET /
 
-- Auth: cualquier usuario autenticado.
-- Query: `q?` (busqueda por nombre), `page` (default 1), `page_size` (default 12, max 100), `include_inactive?` (solo admin).
+- Auth: publico (no requiere sesion). Un token ausente o invalido se trata como visitante.
+- Query: `q?` (busqueda por nombre), `page` (default 1), `page_size` (default 12, max 100), `include_inactive?` (solo lo respeta un admin autenticado; para el resto se ignora).
 - Response 200: `{ items: [{ id, name, description, price, stock, image_url, is_active }], total, page, page_size }`
-- Errores: 401; 422.
+- Errores: 422.
 
 ### GET /{id}
 
+- Auth: cualquier usuario autenticado.
 - Response 200: producto.
 - Errores: 401; 404 (tambien si esta inactivo y el usuario es cliente).
 
@@ -79,7 +80,7 @@ Prefijo: `/api/v1/products`.
 
 ## Pantallas en el frontend
 
-- `/` (catalogo): rejilla responsive de tarjetas (imagen, nombre, precio, stock, boton "Agregar al carrito"), buscador y paginacion. Boton deshabilitado y etiqueta "Agotado" con stock 0.
-- `/products/:id`: detalle con descripcion, selector de cantidad (maximo = stock) y boton agregar.
+- `/` (catalogo, publico): rejilla responsive de tarjetas (imagen, nombre, precio, stock, boton "Agregar al carrito"), buscador y paginacion. Boton deshabilitado y etiqueta "Agotado" con stock 0.
+- `/products/:id` (requiere sesion): detalle con descripcion, selector de cantidad (maximo = stock) y boton agregar.
 - `/admin/products`: tabla con todos los productos (incluye inactivos), acciones editar y desactivar, boton "Nuevo producto". Solo admin.
 - `/admin/products/new` y `/admin/products/:id/edit`: formulario con validacion de precio, stock y URL de imagen.
