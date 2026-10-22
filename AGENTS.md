@@ -77,6 +77,17 @@ quick-shop-curso/
   - Declarar `allowBuilds` en `pnpm-workspace.yaml` para builds no interactivos (agentes/CI).
   - `.dockerignore` obligatorio en cada servicio: excluir `node_modules`, `.venv` y temporales (evita errores de symlinks en Windows).
 
+## Exploracion del codigo
+
+El repositorio esta indexado con CodeGraph (`.codegraph/`). Para entender o localizar codigo, usar CodeGraph siempre que sea posible en lugar de `bash`, `grep`, `find`, `ls`, `git ls-files` o leer ficheros a mano.
+
+- Herramienta MCP `codegraph_explore` (si aparece diferida, cargarla con ToolSearch antes de empezar). Acepta una pregunta en lenguaje natural o una lista de simbolos/ficheros y devuelve el codigo fuente con numeros de linea, el camino de llamadas y las dependencias afectadas.
+- Usarla antes de leer o editar: para "donde esta X", "como funciona X", "que llama a Y" y para ver el impacto de un cambio. El codigo devuelto cuenta como ya leido; no volver a abrir esos ficheros con `Read`.
+- No contrastar sus resultados con `grep`. Si una respuesta queda corta, repetir la llamada con nombres de simbolos mas concretos.
+- `Read`, `Grep` o `Bash` solo para lo que CodeGraph no indexa (configuracion, `docs/`, specs, `.env.example`, `docker-compose.yml`), para confirmar un detalle puntual o tras ver el aviso de indice desactualizado.
+- `Bash` sigue siendo la via para ejecutar tests, migraciones, docker y git; CodeGraph solo sustituye a la exploracion.
+- Si el servidor MCP de CodeGraph no conecta, avisar al usuario en lugar de pasar en silencio a `grep`.
+
 ## Comandos habituales
 
 ```
