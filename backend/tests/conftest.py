@@ -12,6 +12,9 @@ _ROOT = Path(__file__).resolve().parents[2]
 os.environ["DATABASE_URL"] = _test_db_url
 os.environ.setdefault("SECRET_KEY", "test-secret-key-for-pytest-only-0123456789")
 os.environ.setdefault("CORS_ORIGINS", "http://localhost:5173")
+os.environ.setdefault("FRONTEND_URL", "http://localhost:5173")
+os.environ.setdefault("SMTP_HOST", "localhost")
+os.environ.setdefault("SMTP_FROM", "no-reply@quickshop.local")
 os.environ.setdefault("SEED_ADMIN_EMAIL", "admin@quickshop.com")
 os.environ.setdefault("SEED_ADMIN_PASSWORD", "Admin1234!")
 os.environ.setdefault("SEED_CLIENT1_EMAIL", "cliente1@quickshop.com")
@@ -26,6 +29,7 @@ from sqlalchemy.orm import Session  # noqa: E402
 
 from alembic import command  # noqa: E402
 from app.core.config import get_settings  # noqa: E402
+from app.core.email import get_mailer  # noqa: E402
 from app.db.session import get_engine, get_session_factory  # noqa: E402
 from app.main import app  # noqa: E402
 from app.modules.users import service as users_service  # noqa: E402
@@ -47,7 +51,9 @@ def _schema() -> Iterator[None]:
 def _clean_db(_schema: None) -> Iterator[None]:
     yield
     with get_engine().begin() as connection:
-        connection.execute(text("TRUNCATE users, products RESTART IDENTITY CASCADE"))
+        connection.execute(
+            text("TRUNCATE users, products, password_reset_tokens RESTART IDENTITY CASCADE")
+        )
 
 
 @pytest.fixture
@@ -100,3 +106,13 @@ def client_session(make_user) -> TestClient:
 def admin_session(make_user) -> TestClient:
     make_user("admin@example.com", UserRole.admin, ADMIN_PASSWORD, "Admin Test")
     return login(TestClient(app), "admin@example.com", ADMIN_PASSWORD)
+
+
+@pytest.fixture
+def outbox() -> Iterator[list[tuple[str, str, str]]]:
+    sent: list[tuple[str, str, str]] = []
+    app.dependency_overrides[get_mailer] = lambda: (
+        lambda to, subject, body: sent.append((to, subject, body))
+    )
+    yield sent
+    app.dependency_overrides.pop(get_mailer, None)

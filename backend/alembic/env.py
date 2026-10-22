@@ -3,6 +3,7 @@ from sqlalchemy import create_engine, pool
 from alembic import context
 from app.core.config import get_settings
 from app.db.base import Base
+from app.modules.auth import models as auth_models  # noqa: F401
 from app.modules.products import models as products_models  # noqa: F401
 from app.modules.users import models as users_models  # noqa: F401
 

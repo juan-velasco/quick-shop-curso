@@ -5,8 +5,10 @@ import AdminRoute from "./routes/AdminRoute.jsx";
 import ProtectedRoute from "./routes/ProtectedRoute.jsx";
 import AdminProductsPage from "./pages/admin/AdminProductsPage.jsx";
 import ProductFormPage from "./pages/admin/ProductFormPage.jsx";
+import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage.jsx";
 import LoginPage from "./pages/auth/LoginPage.jsx";
 import RegisterPage from "./pages/auth/RegisterPage.jsx";
+import ResetPasswordPage from "./pages/auth/ResetPasswordPage.jsx";
 import CatalogPage from "./pages/catalog/CatalogPage.jsx";
 import ProductDetailPage from "./pages/catalog/ProductDetailPage.jsx";
 import ProfilePage from "./pages/profile/ProfilePage.jsx";
@@ -18,6 +20,8 @@ export default function App() {
         <Route index element={<CatalogPage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
+        <Route path="forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="reset-password" element={<ResetPasswordPage />} />
         <Route element={<ProtectedRoute />}>
           <Route path="profile" element={<ProfilePage />} />
           <Route path="products/:id" element={<ProductDetailPage />} />

@@ -15,6 +15,15 @@ class Settings(BaseSettings):
     cors_origins: Annotated[list[str], NoDecode]
     cookie_secure: bool = False
 
+    frontend_url: str
+    password_reset_expire_minutes: int = 60
+    smtp_host: str
+    smtp_port: int = 1025
+    smtp_from: str
+    smtp_user: str = ""
+    smtp_password: str = ""
+    smtp_starttls: bool = False
+
     seed_admin_email: str
     seed_admin_password: str
     seed_client1_email: str

@@ -45,6 +45,19 @@ Prefijo: `/api/v1/auth`.
 - Response 200: `{ "id": int, "email": str, "full_name": str, "role": "cliente" | "admin" }`
 - Errores: 401 token ausente, invalido o expirado.
 
+### POST /forgot-password
+
+- Publico. Request: `{ "email": "EmailStr" }`
+- Response 202: `{ "detail": "Si el email existe, recibiras un enlace de recuperacion" }`, siempre igual exista o no el email (y sea o no usuario activo).
+- Si existe un usuario activo, se envia un email con el enlace `<FRONTEND_URL>/reset-password?token=<token>`. El token es aleatorio, de un solo uso y caduca a los `PASSWORD_RESET_EXPIRE_MINUTES` (60 por defecto). En BD solo se guarda su hash. Una nueva solicitud invalida los tokens anteriores del usuario.
+- Errores: 422 validacion.
+
+### POST /reset-password
+
+- Publico. Request: `{ "token": "str", "password": "str (misma politica que register)" }`
+- Response 204. Cambia la password y consume el token.
+- Errores: 400 token invalido, caducado o ya usado (mensaje generico); 422 validacion (el token sigue siendo utilizable).
+
 ### Dependencias reutilizables (backend)
 
 - `get_current_user`: valida token y devuelve usuario activo; 401 si falla.
@@ -61,11 +74,16 @@ Prefijo: `/api/v1/auth`.
 7. La password nunca se devuelve ni se registra en logs; en BD solo existe el hash bcrypt.
 8. El token no aparece en `localStorage` ni `sessionStorage` (verificable en e2e).
 9. `SECRET_KEY` y duracion del token salen de variables de entorno.
+10. `forgot-password` responde 202 con el mismo cuerpo para cualquier email y no revela que cuentas existen.
+11. El token de recuperacion caduca, solo sirve una vez y no se almacena en claro; tras el reset se puede iniciar sesion con la nueva password y no con la anterior.
+12. En local el email se consulta en Mailhog (http://localhost:8025).
 
 ## Pantallas en el frontend
 
 - `/login`: formulario email + password, errores inline, enlace a registro. Tras login redirige a `/` (cliente) o `/admin/products` (admin).
 - `/register`: formulario email, nombre, password con indicacion de politica. Tras registro redirige a `/login`.
+- `/forgot-password`: formulario de email; tras enviar muestra un mensaje generico. Enlace "Has olvidado tu password?" desde `/login`. Publica.
+- `/reset-password?token=...`: nueva password con confirmacion e indicacion de politica; exito redirige a `/login` con aviso; 400 muestra el error con enlace a `/forgot-password`; sin `token` indica enlace no valido. Publica.
 - Header: muestra enlaces login/registro si no hay sesion; nombre de usuario y boton "Salir" si la hay.
 - Rutas protegidas (`ProtectedRoute`, `AdminRoute`): redirigen a `/login` (401) o muestran pantalla 403.
 - Al arrancar la app se llama a `/auth/me` para hidratar el contexto de sesion; un 401 posterior en cualquier llamada limpia la sesion y redirige a `/login`.

@@ -1,11 +1,20 @@
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Response, status
 from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
 from app.core.deps import COOKIE_NAME, get_current_user
+from app.core.email import Mailer, get_mailer
 from app.core.security import burn_password_check, create_access_token, verify_password
 from app.db.session import get_db
-from app.modules.auth.schemas import LoginRequest, LoginResponse, RegisterRequest
+from app.modules.auth import service as auth_service
+from app.modules.auth.schemas import (
+    ForgotPasswordRequest,
+    ForgotPasswordResponse,
+    LoginRequest,
+    LoginResponse,
+    RegisterRequest,
+    ResetPasswordRequest,
+)
 from app.modules.users import service as users_service
 from app.modules.users.models import User
 from app.modules.users.schemas import UserBrief
@@ -64,3 +73,29 @@ def logout(response: Response, _: User = Depends(get_current_user)) -> Response:
 @router.get("/me", response_model=UserBrief)
 def me(user: User = Depends(get_current_user)) -> User:
     return user
+
+
+@router.post(
+    "/forgot-password", response_model=ForgotPasswordResponse, status_code=status.HTTP_202_ACCEPTED
+)
+def forgot_password(
+    data: ForgotPasswordRequest,
+    background: BackgroundTasks,
+    db: Session = Depends(get_db),
+    mailer: Mailer = Depends(get_mailer),
+) -> ForgotPasswordResponse:
+    pending = auth_service.request_reset(db, data.email)
+    if pending is not None:
+        background.add_task(auth_service.send_reset_email, mailer, *pending)
+    return ForgotPasswordResponse()
+
+
+@router.post("/reset-password", status_code=status.HTTP_204_NO_CONTENT)
+def reset_password(data: ResetPasswordRequest, db: Session = Depends(get_db)) -> Response:
+    try:
+        auth_service.reset_password(db, data.token, data.password)
+    except auth_service.InvalidResetToken:
+        raise HTTPException(
+            status.HTTP_400_BAD_REQUEST, "El enlace no es valido o ha caducado"
+        ) from None
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

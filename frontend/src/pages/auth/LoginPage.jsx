@@ -35,6 +35,11 @@ export default function LoginPage() {
           Cuenta creada. Ya puedes iniciar sesion.
         </p>
       )}
+      {location.state?.passwordReset && (
+        <p role="status" className="rounded bg-green-100 p-2 text-sm text-green-800">
+          Password actualizada. Ya puedes iniciar sesion.
+        </p>
+      )}
       <form onSubmit={handleSubmit} className="space-y-4" noValidate>
         <FormField
           id="email"
@@ -63,6 +68,11 @@ export default function LoginPage() {
           Entrar
         </Button>
       </form>
+      <p className="text-sm">
+        <Link to="/forgot-password" className="text-indigo-700 underline">
+          Has olvidado tu password?
+        </Link>
+      </p>
       <p className="text-sm">
         No tienes cuenta?{" "}
         <Link to="/register" className="text-indigo-700 underline">
