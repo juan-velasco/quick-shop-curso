@@ -73,3 +73,7 @@ opencode.json
 .playwright-mcp/
 frontend/test-results/
 frontend/playwright-report/
+
+# Playwright
+test-results/
+playwright-report/
